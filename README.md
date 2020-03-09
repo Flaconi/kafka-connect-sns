@@ -4,8 +4,8 @@ The SNS connector plugin provides the ability to use AWS SNS topics as a sink (o
 # Building
 You can build the connector with Maven using the standard lifecycle goals:
 ```
-mvn clean
-mvn package
+gradle build
+gradle jar
 ```
 
 ## Sink Connector
@@ -15,10 +15,11 @@ A sink connector reads from a Kafka topic and publishes to an AWS SNS topic.
 A sink connector configuration has two required fields:
  * `sns.topic.arn`: The ARN of the SNS topic to be written to.
  * `topics`: The Kafka topic to be read from.
+ * `payload.formatter.class`: Implementation class that formats the invocation payload
 
 ### AWS Assume Role Support options
  The connector can assume a cross-account role to enable such features as Server Side Encryption of a queue:
- * `sqs.credentials.provider.class=com.nordstrom.kafka.connect.auth.AWSAssumeRoleCredentialsProvider`: REQUIRED Class providing cross-account role assumption.
+ * `sqs.credentials.provider.class=de.flaconi.kafka.connect.auth.AWSAssumeRoleCredentialsProvider`: REQUIRED Class providing cross-account role assumption.
  * `sqs.credentials.provider.role.arn`: REQUIRED AWS Role ARN providing the access.
  * `sqs.credentials.provider.session.name`: REQUIRED Session name
  * `sqs.credentials.provider.external.id`: OPTIONAL (but recommended) External identifier used by the `kafka-connect-sqs` when assuming the role.
@@ -55,7 +56,7 @@ For a `sink` connector, the minimum actions required are:
     "Action": [
       "sns:PublishMessage"
     ],
-    "Resource": "arn:aws:sqs:*:*:*"
+    "Resource": "arn:aws:sns:*:*:*"
   }]
 }
 ```
@@ -83,7 +84,7 @@ For a `sink` connector, the minimum actions required are:
 }
 ```
 
-* Define an SNS Queue Policy Document for the queue to allow `PublishMessage`. An example policy is:
+* Define an SNS Policy Document for the queue to allow `PublishMessage`. An example policy is:
 
 ```json
 {
@@ -97,7 +98,7 @@ For a `sink` connector, the minimum actions required are:
         "AWS": "arn:aws:iam::<SOME_ACCOUNT>:role/kafka-connect-sns-role"
       },
       "Action": "sns:PublishMessage",
-      "Resource": "arn:aws:sqs:<SOME_REGION>:<SOME_ACCOUNT>:my-queue"
+      "Resource": "arn:aws:sns:<SOME_REGION>:<SOME_ACCOUNT>:my-topic"
     }
   ]
 }
