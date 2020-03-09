@@ -9,7 +9,8 @@ import org.apache.kafka.connect.errors.ConnectException;
 
 public class PayloadFormatterConfig extends AbstractConfig {
   static final String FORMATTER_CLASS_KEY = "payload.formatter.class";
-  static final String FORMATTER_CLASS_DOC = "Implementation class that formats the invocation payload";
+  static final String FORMATTER_CLASS_DOC =
+      "Implementation class that formats the invocation payload";
 
   public PayloadFormatterConfig(final Map<String, String> parsedConfig) {
     super(configDef(), parsedConfig);
@@ -18,9 +19,13 @@ public class PayloadFormatterConfig extends AbstractConfig {
   @SuppressWarnings("unchecked")
   public PayloadFormatter getPayloadFormatter() {
     try {
-      return ((Class<? extends PayloadFormatter>)
-          getClass(FORMATTER_CLASS_KEY)).getDeclaredConstructor().newInstance();
-    } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+      return ((Class<? extends PayloadFormatter>) getClass(FORMATTER_CLASS_KEY))
+          .getDeclaredConstructor()
+          .newInstance();
+    } catch (IllegalAccessException
+        | InstantiationException
+        | InvocationTargetException
+        | NoSuchMethodException e) {
       throw new ConnectException("Unable to create " + FORMATTER_CLASS_KEY, e);
     }
   }
@@ -31,7 +36,8 @@ public class PayloadFormatterConfig extends AbstractConfig {
 
   public static ConfigDef configDef(ConfigDef base) {
     return new ConfigDef(base)
-        .define(FORMATTER_CLASS_KEY,
+        .define(
+            FORMATTER_CLASS_KEY,
             ConfigDef.Type.CLASS,
             PlainPayloadFormatter.class,
             new FormatterClassValidator(),
@@ -42,7 +48,8 @@ public class PayloadFormatterConfig extends AbstractConfig {
   static class FormatterClassValidator implements ConfigDef.Validator {
     @Override
     public void ensureValid(String name, Object formatter) {
-      if (formatter instanceof Class && PayloadFormatter.class.isAssignableFrom((Class<?>)formatter)) {
+      if (formatter instanceof Class
+          && PayloadFormatter.class.isAssignableFrom((Class<?>) formatter)) {
         return;
       }
 

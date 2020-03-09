@@ -35,7 +35,10 @@ public class SnsClient {
     client = builder.build();
   }
 
-  public String publish(final String topicArn, final String subject, final String message,
+  public String publish(
+      final String topicArn,
+      final String subject,
+      final String message,
       final Map<String, Object> attributes) {
     LOG.debug(".send: topicArn={}, subject={}, attributes={}", topicArn, subject, attributes);
 
@@ -43,21 +46,23 @@ public class SnsClient {
       throw new IllegalStateException("AmazonSNS client is not initialized");
     }
 
-    final PublishRequest request = new PublishRequest()
-        .withTopicArn(topicArn)
-        .withMessage(message)
-        .withSubject(subject);
+    final PublishRequest request =
+        new PublishRequest().withTopicArn(topicArn).withMessage(message).withSubject(subject);
 
-    attributes.entrySet().stream()
+    attributes
+        .entrySet()
+        .stream()
         .filter(entry -> Objects.nonNull(entry.getValue()))
-        .filter(entry -> !(entry.getValue() instanceof String) || !((String) entry.getValue())
-            .isEmpty())
-        .forEach(entry ->
-          request.addMessageAttributesEntry(
-            entry.getKey(),
-            new MessageAttributeValue()
-                .withDataType(mapJavaTypeToSnsDataType(entry.getValue().getClass()))
-                .withStringValue(entry.getValue().toString())));
+        .filter(
+            entry ->
+                !(entry.getValue() instanceof String) || !((String) entry.getValue()).isEmpty())
+        .forEach(
+            entry ->
+                request.addMessageAttributesEntry(
+                    entry.getKey(),
+                    new MessageAttributeValue()
+                        .withDataType(mapJavaTypeToSnsDataType(entry.getValue().getClass()))
+                        .withStringValue(entry.getValue().toString())));
 
     LOG.debug(".publish-message: request={}", request);
 
@@ -78,8 +83,8 @@ public class SnsClient {
         providerClass = providerField.toString();
       }
       LOG.warn(".get-credentials-provider:field={}, class={}", providerField, providerClass);
-      AWSCredentialsProvider provider = ((Class<? extends AWSCredentialsProvider>)
-          getClass(providerClass)).newInstance();
+      AWSCredentialsProvider provider =
+          ((Class<? extends AWSCredentialsProvider>) getClass(providerClass)).newInstance();
 
       if (provider instanceof Configurable) {
         ((Configurable) provider).configure(configs);
@@ -89,9 +94,7 @@ public class SnsClient {
       return provider;
     } catch (IllegalAccessException | InstantiationException e) {
       throw new ConnectException(
-          "Invalid class for: " + SnsConnectorConfigKeys.CREDENTIALS_PROVIDER_CLASS_CONFIG,
-          e
-      );
+          "Invalid class for: " + SnsConnectorConfigKeys.CREDENTIALS_PROVIDER_CLASS_CONFIG, e);
     }
   }
 
@@ -110,9 +113,9 @@ public class SnsClient {
   }
 
   private String mapJavaTypeToSnsDataType(Class<?> javaType) {
-    if (Integer.class.equals(javaType) || Long.class
-        .equals(javaType) || Float.class
-        .equals(javaType)) {
+    if (Integer.class.equals(javaType)
+        || Long.class.equals(javaType)
+        || Float.class.equals(javaType)) {
       return "Number";
     }
 

@@ -30,7 +30,7 @@ public class SnsSinkConnector extends SinkConnector {
     final List<Map<String, String>> taskConfigs = new ArrayList<>(maxTasks);
     final Map<String, String> taskProps = new HashMap<>(configProps);
     for (int i = 0; i < maxTasks; i++) {
-      taskConfigs.add( taskProps );
+      taskConfigs.add(taskProps);
     }
     return taskConfigs;
   }

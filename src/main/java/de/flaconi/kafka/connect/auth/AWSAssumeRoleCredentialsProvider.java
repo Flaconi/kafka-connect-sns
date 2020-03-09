@@ -4,8 +4,8 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
 import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
-import org.apache.kafka.common.Configurable;
 import java.util.Map;
+import org.apache.kafka.common.Configurable;
 
 public class AWSAssumeRoleCredentialsProvider implements AWSCredentialsProvider, Configurable {
   public static final String EXTERNAL_ID_CONFIG = "external.id";
@@ -25,18 +25,20 @@ public class AWSAssumeRoleCredentialsProvider implements AWSCredentialsProvider,
 
   @Override
   public AWSCredentials getCredentials() {
-    AWSSecurityTokenServiceClientBuilder clientBuilder = AWSSecurityTokenServiceClientBuilder.standard();
-    AWSCredentialsProvider provider = new STSAssumeRoleSessionCredentialsProvider.Builder(roleArn, sessionName)
-        .withStsClient(AWSSecurityTokenServiceClientBuilder.defaultClient())
-        .withExternalId(externalId)
-        .build();
+    AWSSecurityTokenServiceClientBuilder clientBuilder =
+        AWSSecurityTokenServiceClientBuilder.standard();
+    AWSCredentialsProvider provider =
+        new STSAssumeRoleSessionCredentialsProvider.Builder(roleArn, sessionName)
+            .withStsClient(AWSSecurityTokenServiceClientBuilder.defaultClient())
+            .withExternalId(externalId)
+            .build();
 
     return provider.getCredentials();
   }
 
   @Override
   public void refresh() {
-    //Nothing to do really, since we are assuming a role.
+    // Nothing to do really, since we are assuming a role.
   }
 
   private String getOptionalField(final Map<String, ?> map, final String fieldName) {
@@ -66,14 +68,15 @@ public class AWSAssumeRoleCredentialsProvider implements AWSCredentialsProvider,
 
   private void verifyNotNull(final Object field, final String fieldName) {
     if (!isNotNull(field)) {
-      throw new IllegalArgumentException(String.format("The field '%1s' should not be null", fieldName));
+      throw new IllegalArgumentException(
+          String.format("The field '%1s' should not be null", fieldName));
     }
   }
 
   private void verifyNotNullOrEmpty(final String field, final String fieldName) {
     if (!isNotNullOrEmpty(field)) {
-      throw new IllegalArgumentException(String.format("The field '%1s' should not be null or empty", fieldName));
+      throw new IllegalArgumentException(
+          String.format("The field '%1s' should not be null or empty", fieldName));
     }
   }
-
 }

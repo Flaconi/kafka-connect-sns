@@ -31,9 +31,13 @@ public class SnsSinkConnectorTask extends SinkTask {
 
     config = new SnsSinkConnectorConfig(props);
     payloadFormatter = config.getPayloadFormatterConfig().getPayloadFormatter();
-    client = new SnsClient(config.originalsWithPrefix(SnsConnectorConfigKeys.CREDENTIALS_PROVIDER_CONFIG_PREFIX.getValue()));
+    client =
+        new SnsClient(
+            config.originalsWithPrefix(
+                SnsConnectorConfigKeys.CREDENTIALS_PROVIDER_CONFIG_PREFIX.getValue()));
 
-    LOG.info("task.start:OK, sns.topic.arn={}, topics={}", config.getTopicArn(), config.getTopics());
+    LOG.info(
+        "task.start:OK, sns.topic.arn={}, topics={}", config.getTopicArn(), config.getTopics());
   }
 
   @Override
@@ -51,9 +55,10 @@ public class SnsSinkConnectorTask extends SinkTask {
     for (final SinkRecord record : records) {
       LOG.debug(".put:record_class={}", record.value().getClass());
 
-      final String key = MessageFormat
-          .format("{0}-{1}-{2}", record.topic(), record.kafkaPartition().longValue(),
-          record.kafkaOffset()) ;
+      final String key =
+          MessageFormat.format(
+              "{0}-{1}-{2}",
+              record.topic(), record.kafkaPartition().longValue(), record.kafkaOffset());
       final String body = getPayload(record);
 
       Map<String, Object> attributes = new HashMap<>();
@@ -70,9 +75,17 @@ public class SnsSinkConnectorTask extends SinkTask {
 
       try {
         final String sid = client.publish(config.getTopicArn(), key, body, attributes);
-        LOG.debug(".publish.OK:topic.arn={}, sns-subject={}, sns-message-id={}", config.getTopicArn(), key, sid);
+        LOG.debug(
+            ".publish.OK:topic.arn={}, sns-subject={}, sns-message-id={}",
+            config.getTopicArn(),
+            key,
+            sid);
       } catch (final RuntimeException e) {
-        LOG.error("An Exception ocurred while publishing message {} to target arn {}:", key, config.getTopicArn(), e);
+        LOG.error(
+            "An Exception ocurred while publishing message {} to target arn {}:",
+            key,
+            config.getTopicArn(),
+            e);
       }
     }
   }

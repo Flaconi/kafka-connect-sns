@@ -9,7 +9,7 @@ public enum SnsConnectorConfigKeys {
 
   private final String value;
 
-  SnsConnectorConfigKeys(String  value) {
+  SnsConnectorConfigKeys(String value) {
     this.value = value;
   }
 

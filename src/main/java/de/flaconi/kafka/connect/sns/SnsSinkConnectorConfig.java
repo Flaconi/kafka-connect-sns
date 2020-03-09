@@ -38,15 +38,25 @@ public class SnsSinkConnectorConfig extends AbstractConfig {
   }
 
   public static ConfigDef configDef() {
-    ConfigDef configDef = new ConfigDef()
-        .define(SnsConnectorConfigKeys.TOPICS.getValue(), Type.STRING, Importance.HIGH, "Kafka topic to be read from.")
-        .define(SnsConnectorConfigKeys.SNS_TOPIC_ARN.getValue(), Type.STRING, Importance.HIGH, "ARN of the SNS topic to be written to.")
-        .define(SnsConnectorConfigKeys.CREDENTIALS_PROVIDER_CLASS_CONFIG.getValue(), Type.CLASS,
-            SnsConnectorConfigKeys.CREDENTIALS_PROVIDER_CLASS_DEFAULT.getValue(),
-            new CredentialsProviderValidator(),
-            Importance.LOW,
-            "Credentials provider or provider chain to use for authentication to AWS. By default the connector uses 'DefaultAWSCredentialsProviderChain'."
-        );
+    ConfigDef configDef =
+        new ConfigDef()
+            .define(
+                SnsConnectorConfigKeys.TOPICS.getValue(),
+                Type.STRING,
+                Importance.HIGH,
+                "Kafka topic to be read from.")
+            .define(
+                SnsConnectorConfigKeys.SNS_TOPIC_ARN.getValue(),
+                Type.STRING,
+                Importance.HIGH,
+                "ARN of the SNS topic to be written to.")
+            .define(
+                SnsConnectorConfigKeys.CREDENTIALS_PROVIDER_CLASS_CONFIG.getValue(),
+                Type.CLASS,
+                SnsConnectorConfigKeys.CREDENTIALS_PROVIDER_CLASS_DEFAULT.getValue(),
+                new CredentialsProviderValidator(),
+                Importance.LOW,
+                "Credentials provider or provider chain to use for authentication to AWS. By default the connector uses 'DefaultAWSCredentialsProviderChain'.");
     configDef = PayloadFormatterConfig.configDef(configDef);
     return configDef;
   }
@@ -60,10 +70,7 @@ public class SnsSinkConnectorConfig extends AbstractConfig {
         return;
       }
       throw new ConfigException(
-          name,
-          provider,
-          "Class must extend: " + AWSCredentialsProvider.class
-      );
+          name, provider, "Class must extend: " + AWSCredentialsProvider.class);
     }
 
     @Override
