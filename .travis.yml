@@ -1,1 +1,9 @@
 language: java
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: ./build/libs/kafka-connect-sns-$TRAVIS_TAG.jar
+  skip_cleanup: true
+  on:
+    tags: true
