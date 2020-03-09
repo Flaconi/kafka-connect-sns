@@ -115,3 +115,8 @@ atlassian-ide-plugin.xml
 # Logs
 # ----
 /*.log
+
+
+# Lombok
+# ------
+lombok.config

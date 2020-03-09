@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'io.freefair.lombok' version '4.1.6'
 }
 
 repositories {
@@ -8,6 +9,7 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor 'org.projectlombok:lombok'
     compileOnly "org.apache.kafka:connect-api:$kafkaConnectVersion"
     compileOnly "org.apache.kafka:connect-json:$kafkaConnectVersion"
     compile "com.amazonaws:aws-java-sdk-core:$awsSdkVersion"

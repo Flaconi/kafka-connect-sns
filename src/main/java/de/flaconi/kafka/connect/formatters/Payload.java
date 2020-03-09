@@ -1,7 +1,11 @@
 package de.flaconi.kafka.connect.formatters;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.kafka.connect.sink.SinkRecord;
 
+@Getter
+@Setter
 public class Payload<K, V> {
   private K key;
   private String keySchemaName;
@@ -41,93 +45,5 @@ public class Payload<K, V> {
     if (record.timestampType() != null) {
       this.timestampTypeName = record.timestampType().name;
     }
-  }
-
-  public K getKey() {
-    return key;
-  }
-
-  public void setKey(K key) {
-    this.key = key;
-  }
-
-  public String getKeySchemaName() {
-    return keySchemaName;
-  }
-
-  public void setKeySchemaName(String keySchemaName) {
-    this.keySchemaName = keySchemaName;
-  }
-
-  public String getKeySchemaVersion() {
-    return keySchemaVersion;
-  }
-
-  public void setKeySchemaVersion(String keySchemaVersion) {
-    this.keySchemaVersion = keySchemaVersion;
-  }
-
-  public V getValue() {
-    return value;
-  }
-
-  public void setValue(V value) {
-    this.value = value;
-  }
-
-  public String getValueSchemaName() {
-    return valueSchemaName;
-  }
-
-  public void setValueSchemaName(String valueSchemaName) {
-    this.valueSchemaName = valueSchemaName;
-  }
-
-  public String getValueSchemaVersion() {
-    return valueSchemaVersion;
-  }
-
-  public void setValueSchemaVersion(String valueSchemaVersion) {
-    this.valueSchemaVersion = valueSchemaVersion;
-  }
-
-  public String getTopic() {
-    return topic;
-  }
-
-  public void setTopic(String topic) {
-    this.topic = topic;
-  }
-
-  public int getPartition() {
-    return partition;
-  }
-
-  public void setPartition(int partition) {
-    this.partition = partition;
-  }
-
-  public long getOffset() {
-    return offset;
-  }
-
-  public void setOffset(long offset) {
-    this.offset = offset;
-  }
-
-  public long getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(long timestamp) {
-    this.timestamp = timestamp;
-  }
-
-  public String getTimestampTypeName() {
-    return timestampTypeName;
-  }
-
-  public void setTimestampTypeName(String timestampTypeName) {
-    this.timestampTypeName = timestampTypeName;
   }
 }
