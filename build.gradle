@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://jcenter.bintray.com" }
+}
+
+dependencies {
+    compileOnly "org.apache.kafka:connect-api:$kafkaConnectVersion"
+    compileOnly "org.apache.kafka:connect-json:$kafkaConnectVersion"
+    compile "com.amazonaws:aws-java-sdk-core:$awsSdkVersion"
+    compile "com.amazonaws:aws-java-sdk-sns:$awsSdkVersion"
+    compile "com.amazonaws:aws-java-sdk-sts:$awsSdkVersion"
+    testCompile 'junit:junit:4.12'
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from(sourceSets.main.allJava)
+}
+
+group = 'de.flaconi.kafka.connect.sns'
+version = '0.0.1'
+description = 'Kafka Connect SNS Sink Connector'
+sourceCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
