@@ -3,6 +3,7 @@ plugins {
     id "jacoco"
     id 'io.freefair.lombok' version '4.1.6'
     id 'com.github.sherter.google-java-format' version '0.8'
+    id 'nebula.release' version '13.0.0'
 }
 
 repositories {
@@ -26,9 +27,8 @@ task sourcesJar(type: Jar) {
 }
 
 group = 'de.flaconi.kafka.connect.sns'
-version = '0.0.1'
 description = 'Kafka Connect SNS Sink Connector'
-sourceCompatibility = '1.8'
+sourceCompatibility = JavaVersion.VERSION_1_8
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
