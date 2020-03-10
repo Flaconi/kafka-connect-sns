@@ -1,12 +1,13 @@
 language: java
 
 before_deploy:
-  - ./gradlew -Prelease.useLastTag=true final
+  - ./gradlew -Prelease.useLastTag=true clean final
 
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
   file_glob: true
   file: build/libs/*
+  skip_cleanup: true
   on:
     tags: true
