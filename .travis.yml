@@ -1,8 +1,12 @@
 language: java
 
+before_deploy:
+  - ./gradlew -Prelease.useLastTag=true final
+
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
-  file: build/libs/kafka-connect-sns.jar
+  file: build/libs/*
   skip_cleanup: true
-  draft: true
+  on:
+    tags: true
