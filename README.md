@@ -1,6 +1,8 @@
 # kafka-connect-sns
 The SNS connector plugin provides the ability to use AWS SNS topics as a sink (out of a Kafka topic into an SNS topic).
 
+Based on https://github.com/Nordstrom/kafka-connect-lambda/.
+
 # Building
 You can build the connector with Maven using the standard lifecycle goals:
 ```
