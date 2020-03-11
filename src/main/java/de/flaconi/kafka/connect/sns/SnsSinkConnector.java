@@ -47,6 +47,6 @@ public class SnsSinkConnector extends SinkConnector {
 
   @Override
   public String version() {
-    return "0.0.1";
+    return Version.CURRENT;
   }
 }
