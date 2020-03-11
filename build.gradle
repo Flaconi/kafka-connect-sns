@@ -39,3 +39,31 @@ jar {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
+
+sourceSets {
+    generated{
+        java.srcDir "${buildDir}/generated-src/"
+    }
+
+    main {
+        compileClasspath += generated.output
+        runtimeClasspath += generated.output
+    }
+
+    test {
+        compileClasspath += generated.output
+        runtimeClasspath += generated.output
+    }
+}
+
+task generateSources {
+    def packageDir = project.group.toString().split('\\.').join('/')
+    def outputDir = file("$buildDir/generated-src/$packageDir")
+    outputs.dir outputDir
+    doFirst {
+        outputDir.exists() || outputDir.mkdirs()
+        new File(outputDir, "Version.java").write("package ${project.group};\n\npublic class Version {\n  public static final String CURRENT = \"$project.version\";\n}\n")
+    }
+}
+compileJava.dependsOn generateSources
+compileJava.source generateSources.outputs.files, sourceSets.main.java
