@@ -15,9 +15,14 @@ gradle jar
 A sink connector reads from a Kafka topic and publishes to an AWS SNS topic.
 
 A sink connector configuration has two required fields:
- * `sns.topic.arn`: The ARN of the SNS topic to be written to.
  * `topics`: The Kafka topic to be read from.
+ * `sns.topic.arn`: The ARN of the SNS topic to be written to.
  * `payload.formatter.class`: Implementation class that formats the invocation payload
+ 
+If topic is using Avro, you may need to provide config fields:
+ * `key.converter`: The Kafka topic key converter, e.g `org.apache.kafka.connect.storage.StringConverter`
+ * `value.converter`: The Kafka topic value converter, e.g. `io.confluent.connect.avro.AvroConverter`
+ * `value.converter.schema.registry.url`: The schema registry URL
 
 ### AWS Assume Role Support options
  The connector can assume a cross-account role to enable such features as Server Side Encryption of a queue:
@@ -29,18 +34,33 @@ A sink connector configuration has two required fields:
 ### Sample Configuration
 ```json
 {
-  "config": {
-    "connector.class": "de.flaconi.kafka.connect.sns.SqsSinkConnector",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "name": "sqs-sink-chirped",
-    "sqs.queue.url": "arn:aws:sns:<SOME_REGION>:<SOME_ACCOUNT>:chirps-q",
-    "topics": "chirps-t",
-    "value.converter": "org.apache.kafka.connect.storage.StringConverter"
-  },
-  "name": "sqs-sink-chirped"
+  "name": "chirps-t-sink",
+  "connector.class": "de.flaconi.kafka.connect.sns.SnsSinkConnector",
+  "topics": [
+    "chirps-t"
+  ],
+  "sns.topic.arn": "arn:aws:sns:<REGION>:<ACCOUNT_NUMBER>:test-kafka",
+  "payload.formatter.class": "de.flaconi.kafka.connect.formatters.JsonPayloadFormatter"
 }
+
 ```
 
+### Sample Configuration with Avro
+```json
+{
+  "name": "chirps-t-avro-sink",
+  "connector.class": "de.flaconi.kafka.connect.sns.SnsSinkConnector",
+  "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+  "value.converter": "io.confluent.connect.avro.AvroConverter",
+  "topics": [
+    "chirps-t"
+  ],
+  "sns.topic.arn": "arn:aws:sns:<REGION>:<ACCOUNT_NUMBER>:test-kafka",
+  "payload.formatter.class": "de.flaconi.kafka.connect.formatters.JsonPayloadFormatter",
+  "value.converter.schema.registry.url": "http://<SCHEMA_REGISTRY_URL>:8081",
+  "schema.compatibility": "NONE"
+}
+```
 
 ## AWS IAM Policies
 
@@ -106,7 +126,7 @@ For a `sink` connector, the minimum actions required are:
 }
 ```
 
-The sink connector configuration would then include the additional fields:
+The sink connector configuration would then include the additional fields if not provided via environment variables:
 
 ```
   sns.credentials.provider.class=de.flaconi.kafka.connect.auth.AWSAssumeRoleCredentialsProvider
