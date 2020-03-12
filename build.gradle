@@ -13,8 +13,12 @@ repositories {
 
 dependencies {
     annotationProcessor 'org.projectlombok:lombok'
-    compileOnly "org.apache.kafka:connect-api:$kafkaConnectVersion"
-    compileOnly "org.apache.kafka:connect-json:$kafkaConnectVersion"
+    compile "org.apache.kafka:connect-api:$kafkaConnectVersion"
+    compile "org.apache.kafka:connect-json:$kafkaConnectVersion"
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:$jacksonVersion"
     compile "com.amazonaws:aws-java-sdk-core:$awsSdkVersion"
     compile "com.amazonaws:aws-java-sdk-sns:$awsSdkVersion"
     compile "com.amazonaws:aws-java-sdk-sts:$awsSdkVersion"
